@@ -19,6 +19,7 @@ Example:
 """
 import argparse
 import math
+from pathlib import Path
 
 import numpy as np
 from scipy import stats
@@ -28,7 +29,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from pylab import rcParams
 
-from cmaes._cma import CMA
+from csa import CMA_CSA
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -153,7 +154,7 @@ else:
 seed = args.seed
 bounds = np.array([[x1_lower_bound, x1_upper_bound], [x2_lower_bound, x2_upper_bound]])
 sigma = (x1_upper_bound - x2_lower_bound) / 5
-optimizer = CMA(mean=np.zeros(2), sigma=sigma, bounds=bounds, seed=seed)
+optimizer = CMA_CSA(mean=np.zeros(2), sigma=sigma, bounds=bounds, seed=seed)
 solutions = []
 trial_number = 0
 rng = np.random.RandomState(seed)
@@ -224,7 +225,7 @@ def update(frame):
             popsize = get_next_popsize()
             lower_bounds, upper_bounds = bounds[:, 0], bounds[:, 1]
             mean = lower_bounds + (rng.rand(2) * (upper_bounds - lower_bounds))
-            optimizer = CMA(
+            optimizer = CMA_CSA(
                 mean=mean,
                 sigma=sigma,
                 bounds=bounds,
@@ -282,7 +283,9 @@ def main():
         blit=False,
         interval=args.interval,
     )
-    ani.save(f"./tmp/{args.function}.mp4")
+    animation_path = Path().absolute() / f'csa_{args.function}.gif'
+    print(f"Animation path: {animation_path}")
+    ani.save(animation_path)
 
 
 if __name__ == "__main__":

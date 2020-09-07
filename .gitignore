@@ -1,14 +1,7 @@
-venv/
-dist/
-build/
-__pycache__/
-.mypy_cache/
-*.pyc
-.eggs/
-*.egg-info/
+visualizer/*.gif
 
-tmp/
-benchmark/*.json
-*.stats
-*.sqlite3
+*/__pycache__
 
+.ipynb_checkpoints
+
+.github
