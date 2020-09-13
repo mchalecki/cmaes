@@ -9,7 +9,7 @@ from typing import Tuple
 import numpy as np
 
 
-class CMA_CSA:
+class CMA_CSA_MOD1:
     """CMA-ES stochastic optimizer class with ask-and-tell interface.
 
     Example:
@@ -270,8 +270,8 @@ class CMA_CSA:
         param = np.where(param > self._bounds[:, 1], self._bounds[:, 1], param)
         return param
 
-    def tell(self, solutions: List[Tuple[np.ndarray, float]]) -> Tuple[float]:
-        """Tell evaluation values"""
+    def tell(self, solutions: List[Tuple[np.ndarray, float]], percentile=float) -> Tuple[float]:
+        """Tell evaluation values. Percentile 0-1"""
         if len(solutions) != self._popsize:
             raise ValueError("Must tell popsize-length solutions.")
 
@@ -302,8 +302,11 @@ class CMA_CSA:
         ) * C_2.dot(y_w)
 
         norm_p_sigma = np.linalg.norm(self._p_sigma)
+        # self._sigma *= np.exp(
+        #     (self._c_sigma / self._d_sigma) * (norm_p_sigma / self._chi_n - 1)
+        # )
         self._sigma *= np.exp(
-            (self._c_sigma / self._d_sigma) * (norm_p_sigma / self._chi_n - 1)
+            (percentile + 0.5) * (self._c_sigma / self._d_sigma) * (norm_p_sigma / self._chi_n - 1)
         )
         self._sigma = min(self._sigma, sys.float_info.max / 5)
 
