@@ -270,7 +270,7 @@ class CMA_CSA:
         param = np.where(param > self._bounds[:, 1], self._bounds[:, 1], param)
         return param
 
-    def tell(self, solutions: List[Tuple[np.ndarray, float]]) -> Tuple[float]:
+    def tell(self, solutions: List[Tuple[np.ndarray, float]], percentile=float) -> Tuple[float]:
         """Tell evaluation values"""
         if len(solutions) != self._popsize:
             raise ValueError("Must tell popsize-length solutions.")
